@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#535caf" />
+    <meta
+      name="description"
+      content="Шкільний розклад і журнал: заняття на конкретну дату, оцінки, особисті записи та коментарі учнів."
+    />
+    <title>Мій розклад — шкільний тиждень</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./schedule.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#schedule">До розкладу</a>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./" aria-label="Мій розклад — головна">
+          <span class="brand-icon" aria-hidden="true"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+            >
+              <path
+                d="M12 6C9 4 5 4 3 5v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-2-1-6-1-9 1Z"
+              />
+              <path d="M12 6v14" /></svg
+          ></span>
+          Мій розклад
+        </a>
+        <span class="topbar-caption">Шкільний простір</span>
+        <div class="role-switch" role="group" aria-label="Режим перегляду">
+          <button id="student-role" type="button" aria-pressed="false">
+            Учень
+          </button>
+          <button id="teacher-role" type="button" aria-pressed="true">
+            Викладач
+          </button>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="page-heading">
+        <div>
+          <div class="eyebrow" id="academic-year">
+            2026 / 2027 НАВЧАЛЬНИЙ РІК
+          </div>
+          <h1 id="page-title">Розклад викладача</h1>
+        </div>
+        <div class="subject-label">
+          <span class="subject-icon" aria-hidden="true">Aa</span>
+          <div>
+            <span class="secondary">Навчальний простір</span
+            ><strong>Розклад і журнал</strong>
+          </div>
+        </div>
+      </div>
+      <div class="audience-toolbar">
+        <p id="audience-description">Заняття, оцінки та обговорення</p>
+        <div id="student-class-control" class="class-control" hidden>
+          <label for="student-class">Мій клас</label>
+          <select id="student-class"></select>
+          <label for="student-profile">Профіль</label>
+          <select id="student-profile"></select>
+        </div>
+        <button id="add-lesson" class="action-button" type="button">
+          + Додати заняття
+        </button>
+      </div>
+      <div
+        id="connection-status"
+        class="connection-status"
+        role="status"
+        hidden
+      >
+        <span id="connection-message"></span>
+        <button id="retry-load" class="text-button" type="button" hidden>
+          Спробувати ще раз
+        </button>
+      </div>
+      <section class="schedule-panel" aria-label="Шкільний розклад">
+        <div class="toolbar">
+          <div class="date-controls">
+            <div class="arrows">
+              <button
+                class="icon-button"
+                id="previous"
+                type="button"
+                aria-label="Попередній тиждень"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <path d="m14 6-6 6 6 6" />
+                </svg>
+              </button>
+              <button
+                class="icon-button"
+                id="next"
+                type="button"
+                aria-label="Наступний тиждень"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <path d="m10 6 6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+            <h2 id="date-range"></h2>
+            <button id="today" class="today-button" type="button">
+              Сьогодні
+            </button>
+          </div>
+          <div class="view-switch" role="group" aria-label="Вигляд розкладу">
+            <button id="week-view" type="button" aria-pressed="true">
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <rect x="3" y="4" width="14" height="12" rx="2" />
+                <path d="M7.7 4v12M12.3 4v12" /></svg
+              >Тиждень
+            </button>
+            <button id="day-view" type="button" aria-pressed="false">
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <rect x="4" y="3" width="12" height="14" rx="2" />
+                <path d="M7 7h6M7 10h6M7 13h4" /></svg
+              >День
+            </button>
+          </div>
+        </div>
+        <div
+          class="day-strip"
+          id="day-strip"
+          role="group"
+          aria-label="Дні тижня"
+        ></div>
+        <p
+          id="schedule-announcement"
+          class="sr-only"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div id="schedule" class="week-grid" tabindex="-1"></div>
+        <div class="panel-footer">
+          <div class="legend">
+            <span><i class="legend-line" aria-hidden="true"></i>У школі</span
+            ><span
+              ><i class="legend-line online-line" aria-hidden="true"></i
+              >Онлайн</span
+            >
+          </div>
+          <span class="lesson-count" id="lesson-count"></span>
+        </div>
+      </section>
+      <footer class="page-footer">
+        <span>Навчальний приклад · демонстраційні профілі</span
+        ><span
+          >Час за Києвом <span aria-hidden="true">·</span> Зміни
+          зберігаються</span
+        >
+      </footer>
+    </main>
+    <dialog
+      id="lesson-dialog"
+      class="detail-dialog"
+      aria-labelledby="dialog-title"
+    >
+      <div class="dialog-top">
+        <span class="eyebrow">ДЕТАЛІ УРОКУ</span
+        ><button
+          id="close-dialog"
+          class="icon-button"
+          type="button"
+          aria-label="Закрити деталі уроку"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+      <h2 id="dialog-title">Англійська мова</h2>
+      <p id="dialog-topic" class="dialog-topic"></p>
+      <p id="dialog-date" class="dialog-date"></p>
+      <dl id="dialog-details"></dl>
+      <div id="lesson-actions" class="lesson-actions" hidden>
+        <button id="edit-lesson" type="button" class="action-button">
+          Редагувати заняття
+        </button>
+        <button id="delete-lesson" type="button" class="danger-button">
+          Видалити
+        </button>
+      </div>
+      <p id="details-error" class="form-error" role="alert"></p>
+      <div id="lesson-workspace"></div>
+    </dialog>
+    <dialog id="editor-dialog" aria-labelledby="editor-title">
+      <div class="dialog-top">
+        <h2 id="editor-title">Додати заняття</h2>
+        <button
+          id="close-editor"
+          type="button"
+          class="icon-button"
+          aria-label="Закрити редактор"
+        >
+          ×
+        </button>
+      </div>
+      <p class="form-hint" id="editor-hint">
+        Зміни стосуються лише обраної дати.
+      </p>
+      <form id="lesson-form" class="lesson-form">
+        <div class="form-grid">
+          <label
+            >Дата<input
+              id="lesson-date"
+              name="date"
+              type="date"
+              min="2000-01-01"
+              max="2100-12-31"
+              required
+          /></label>
+          <label
+            >Клас<select id="lesson-class" name="class_name" required></select
+          ></label>
+          <label
+            >Номер уроку<input
+              id="lesson-position"
+              name="position"
+              type="number"
+              min="1"
+              max="20"
+              required
+          /></label>
+          <label
+            >Кабінет<input
+              id="lesson-room"
+              name="room"
+              maxlength="40"
+              placeholder="Наприклад, 12"
+          /></label>
+          <label
+            >Початок<input
+              id="lesson-start"
+              name="start_time"
+              type="time"
+              required
+          /></label>
+          <label
+            >Кінець<input id="lesson-end" name="end_time" type="time" required
+          /></label>
+        </div>
+        <label
+          >Предмет<input
+            id="lesson-subject"
+            name="subject"
+            maxlength="100"
+            required
+        /></label>
+        <label
+          >Тема<input id="lesson-topic" name="topic" maxlength="300" required
+        /></label>
+        <label class="checkbox-label"
+          ><input id="lesson-online" name="online" type="checkbox" />
+          Онлайн-заняття</label
+        >
+        <p id="editor-error" class="form-error" role="alert"></p>
+        <button class="primary-button" type="submit">Зберегти заняття</button>
+      </form>
+    </dialog>
+    <dialog id="delete-dialog" aria-labelledby="delete-title">
+      <h2 id="delete-title">Видалити заняття?</h2>
+      <p id="delete-summary" class="form-hint"></p>
+      <p class="form-hint">Заняття зникне з розкладу лише на цю дату.</p>
+      <p id="delete-error" class="form-error" role="alert"></p>
+      <div class="lesson-actions">
+        <button
+          id="cancel-delete"
+          class="action-button secondary-action"
+          type="button"
+        >
+          Залишити</button
+        ><button id="confirm-delete" class="danger-button" type="button">
+          Видалити заняття
+        </button>
+      </div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <noscript
+      ><p class="noscript">
+        Увімкни JavaScript у браузері, щоб переглядати розклад уроків.
+      </p></noscript
+    >
+  </body>
+</html>

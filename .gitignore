@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+Thumbs.db
+data/
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Локальні ключі, записи та результати транскрипції
+.env
+.env.*
+*.mp3
+*.wav
+*.m4a
+*.ogg
+*.mp4
+*_transcript.txt
+*_transcript.json
+*_summary.txt
