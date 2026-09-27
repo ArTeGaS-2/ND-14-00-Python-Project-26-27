@@ -1367,3 +1367,149 @@ dialog textarea {
     transition: none !important;
   }
 }
+
+/* Інструмент для підготовки конспекту з аудіозапису на стороні учня. */
+.student-audio-panel {
+  margin: 0 0 22px;
+  padding: 22px 24px;
+  border: 1px solid #dee2ed;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 18px #252e5d04;
+}
+.audio-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.audio-panel-heading h2 {
+  margin: 7px 0 0;
+  font-size: 22px;
+  letter-spacing: -0.35px;
+}
+.audio-duration-badge {
+  flex: none;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f0f2fb;
+  color: var(--primary-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+.audio-panel-intro {
+  max-width: 850px;
+  margin: 13px 0 18px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.audio-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.audio-options label,
+.audio-file-label,
+.summary-output > label {
+  display: grid;
+  gap: 7px;
+  color: #535d78;
+  font-size: 14px;
+  font-weight: 600;
+}
+.audio-options select,
+.audio-file-label input,
+.summary-output textarea {
+  width: 100%;
+  min-height: 43px;
+  padding: 9px 11px;
+  border: 1px solid #cdd3e2;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+}
+.audio-options select:focus-visible,
+.audio-file-label input:focus-visible,
+.summary-output textarea:focus-visible {
+  outline: 3px solid #a6b0e7;
+  outline-offset: 2px;
+}
+.audio-file-name {
+  margin: 8px 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+#audio-preview {
+  display: block;
+  width: min(100%, 650px);
+  margin: 10px 0 15px;
+}
+#audio-preview[hidden] {
+  display: none;
+}
+.audio-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 12px 0 15px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.audio-confirmation input {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin: 1px 0 0;
+  accent-color: var(--primary);
+}
+.audio-status {
+  min-height: 22px;
+  margin: 11px 0 0;
+  color: var(--primary-dark);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.audio-status.is-error {
+  color: #a82e36;
+}
+.summary-output {
+  display: grid;
+  gap: 10px;
+  margin-top: 17px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.summary-output textarea {
+  min-height: 260px;
+  resize: vertical;
+  line-height: 1.6;
+  font-weight: 400;
+  white-space: pre-wrap;
+}
+.summary-output .action-button {
+  justify-self: start;
+}
+@media (max-width: 600px) {
+  .student-audio-panel {
+    padding: 18px 16px;
+  }
+  .audio-panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .audio-panel-heading h2 {
+    font-size: 20px;
+  }
+  .audio-options {
+    grid-template-columns: 1fr;
+  }
+  .summary-output .action-button {
+    width: 100%;
+  }
+}

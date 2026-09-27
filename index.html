@@ -12,6 +12,7 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./schedule.js" defer></script>
+    <script src="./audio-summary.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#schedule">До розкладу</a>
@@ -82,6 +83,72 @@
           Спробувати ще раз
         </button>
       </div>
+      <section
+        id="student-audio-panel"
+        class="student-audio-panel"
+        aria-labelledby="student-audio-title"
+        hidden
+      >
+        <div class="audio-panel-heading">
+          <div>
+            <span class="eyebrow">НАВЧАЛЬНІ МАТЕРІАЛИ</span>
+            <h2 id="student-audio-title">Конспект заняття з аудіозапису</h2>
+          </div>
+          <span class="audio-duration-badge">до 8 хв на фрагмент</span>
+        </div>
+        <p class="audio-panel-intro">
+          Обери запис, перевір його прослуховуванням і підтвердь файл. Після запуску
+          аудіо передається вибраному сервісу розпізнавання, а текст — моделі для
+          конспекту. Використання API може тарифікуватися за обліковим записом сервісу.
+        </p>
+        <div class="audio-options">
+          <label for="audio-transcriber">
+            Розпізнавання аудіо
+            <select id="audio-transcriber">
+              <option value="openai">OpenAI · Whisper</option>
+              <option value="groq">GroqCloud · Whisper Large V3 Turbo</option>
+            </select>
+          </label>
+          <label for="summary-model">
+            Модель для конспекту
+            <select id="summary-model">
+              <option value="openai-gpt-5.6-luna">OpenAI · GPT-5.6-Luna</option>
+              <option value="groq-gpt-oss-120b">GroqCloud · GPT-OSS-120B</option>
+              <option value="groq-gpt-oss-20b">GroqCloud · GPT-OSS-20B</option>
+            </select>
+          </label>
+        </div>
+        <label class="audio-file-label" for="lesson-audio-file">
+          Запис заняття
+          <input
+            id="lesson-audio-file"
+            type="file"
+            accept=".mp3,.wav,.m4a,.mp4,.mpeg,.mpga,.ogg,.flac,.webm,audio/*"
+          />
+        </label>
+        <p id="audio-file-name" class="audio-file-name">Файл ще не вибрано</p>
+        <audio id="audio-preview" controls preload="metadata" hidden></audio>
+        <label class="audio-confirmation" for="audio-confirm-file">
+          <input id="audio-confirm-file" type="checkbox" />
+          Я перевірила запис і підтверджую, що це потрібний файл заняття.
+        </label>
+        <button id="create-summary" class="action-button" type="button" disabled>
+          Створити конспект
+        </button>
+        <p id="audio-status" class="audio-status" role="status" aria-live="polite"></p>
+        <div class="summary-output">
+          <label for="summary-output">Конспект заняття</label>
+          <textarea
+            id="summary-output"
+            rows="12"
+            spellcheck="true"
+            placeholder="Тут з’явиться готовий конспект. Його можна відредагувати перед копіюванням."
+          ></textarea>
+          <button id="copy-summary" class="action-button secondary-action" type="button" disabled>
+            Копіювати весь текст
+          </button>
+        </div>
+      </section>
       <section class="schedule-panel" aria-label="Шкільний розклад">
         <div class="toolbar">
           <div class="date-controls">

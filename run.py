@@ -9,12 +9,15 @@ from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
 from server import APIError, ScheduleStore
+from API.audio_service import AudioPipelineError, AudioSummaryService
 
 ROOT = Path(__file__).resolve().parent
-PUBLIC_FILES = {"/": "index.html", "/index.html": "index.html", "/styles.css": "styles.css", "/schedule.js": "schedule.js", "/favicon.svg": "favicon.svg"}
+PUBLIC_FILES = {"/": "index.html", "/index.html": "index.html", "/styles.css": "styles.css", "/schedule.js": "schedule.js", "/audio-summary.js": "audio-summary.js", "/favicon.svg": "favicon.svg"}
 
 
 def handler_for(store):
+    audio_service = AudioSummaryService()
+
     class Handler(BaseHTTPRequestHandler):
         def send_body(self, status, body, content_type="application/json; charset=utf-8"):
             self.send_response(status)
@@ -33,6 +36,42 @@ def handler_for(store):
                     origin = self.headers.get("Origin")
                     if origin and urlparse(origin).netloc != self.headers.get("Host"):
                         raise APIError(403, "Запит має надходити з цього сайту.")
+                    if parsed.path == "/api/audio-summary":
+                        # This request can fail before the body is read, so close
+                        # its connection rather than reusing unread audio bytes.
+                        self.close_connection = True
+                        if self.command != "POST":
+                            raise APIError(405, "Для обробки аудіо потрібен POST-запит.")
+                        actor = store.actor(self.headers)
+                        if actor["role"] != "student":
+                            raise APIError(403, "Створювати конспект можна в режимі учня.")
+                        if self.headers.get("X-Audio-Confirmed") != "true":
+                            self.close_connection = True
+                            raise APIError(400, "Спершу підтверди, що вибрано правильний запис.")
+                        try:
+                            size = int(self.headers.get("Content-Length", "0"))
+                        except ValueError:
+                            self.close_connection = True
+                            raise APIError(400, "Не вдалося визначити розмір аудіофайлу.")
+                        if not 0 < size <= audio_service.MAX_UPLOAD_BYTES:
+                            self.close_connection = True
+                            raise APIError(413, "Файл має бути розміром до 300 МБ.")
+                        content_type = self.headers.get("Content-Type", "")
+                        if not (content_type.startswith("audio/") or content_type == "application/octet-stream"):
+                            self.close_connection = True
+                            raise APIError(415, "Передай аудіофайл у підтримуваному форматі.")
+                        try:
+                            result = audio_service.process_upload(
+                                self.rfile,
+                                size,
+                                self.headers.get("X-Audio-Extension", ""),
+                                self.headers.get("X-Transcription-Provider", ""),
+                                self.headers.get("X-Summary-Model", ""),
+                            )
+                        except AudioPipelineError as error:
+                            raise APIError(error.status, error.message)
+                        self.send_body(200, json.dumps(result, ensure_ascii=False).encode("utf-8"))
+                        return
                     data = {}
                     if self.command in ("POST", "PUT", "DELETE"):
                         if not self.headers.get("Content-Type", "").startswith("application/json"):
