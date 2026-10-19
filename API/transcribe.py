@@ -41,7 +41,7 @@ OPENAI_TEXT_MODEL = "gpt-5.6-luna"
 # НАЛАШТУВАННЯ
 # ============================================================
 
-# На скільки хвилин різати аудіо для Groq
+# Максимальна тривалість фрагмента для моделей транскрипції.
 CHUNK_MINUTES = 8
 
 
@@ -109,7 +109,7 @@ def get_api_key(provider):
 
     if provider == "openai":
 
-        key = os.getenv("OPENAI_API_KEY", "")
+        key = os.environ.get("OPENAI_API_KEY", "").strip()
 
         if not key:
             key = getpass(
@@ -118,7 +118,7 @@ def get_api_key(provider):
 
         return key
 
-    key = os.getenv("GROQ_API_KEY", "")
+    key = os.environ.get("GROQ_API_KEY", "").strip()
 
     if not key:
         key = getpass(
