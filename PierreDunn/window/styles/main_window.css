@@ -1,0 +1,34 @@
+QMainWindow {
+    background-color: #11141c;
+}
+
+QFrame#sidePanelLeft, QFrame#sidePanelRight {
+    background-color: rgba(19, 24, 34, 205);
+    border: 1px solid rgba(133, 153, 180, 105);
+    border-radius: 10px;
+}
+
+QFrame#conversationArea {
+    background-color: rgba(13, 18, 29, 72);
+    border: 1px solid rgba(133, 153, 180, 90);
+    border-radius: 10px;
+}
+
+QLabel#leftPanelPlaceholder, QLabel#rightPanelPlaceholder {
+    color: #d3dbea;
+    font-size: 14px;
+}
+
+QPlainTextEdit#inputField {
+    background-color: rgba(18, 23, 34, 238);
+    color: #f3f6fc;
+    border: 1px solid rgba(139, 158, 186, 150);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    selection-background-color: #3b6475;
+}
+
+QPlainTextEdit#inputField:focus {
+    border: 1px solid #55b9bd;
+}

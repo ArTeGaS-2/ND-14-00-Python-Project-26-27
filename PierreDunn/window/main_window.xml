@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1100</width><height>720</height></rect>
+  </property>
+  <property name="minimumSize">
+   <size><width>850</width><height>550</height></size>
+  </property>
+  <property name="windowTitle"><string>Luna Agent</string></property>
+  <widget class="AnimatedBackground" name="centralWidget">
+   <layout class="QHBoxLayout" name="mainLayout">
+    <property name="leftMargin"><number>16</number></property>
+    <property name="topMargin"><number>16</number></property>
+    <property name="rightMargin"><number>16</number></property>
+    <property name="bottomMargin"><number>16</number></property>
+    <property name="spacing"><number>12</number></property>
+    <item>
+     <widget class="QFrame" name="sidePanelLeft">
+      <property name="minimumSize"><size><width>180</width><height>0</height></size></property>
+      <property name="maximumSize"><size><width>180</width><height>16777215</height></size></property>
+      <layout class="QVBoxLayout" name="leftPanelLayout">
+       <item>
+        <widget class="QLabel" name="leftPanelPlaceholder">
+         <property name="text"><string>Ліва панель
+(майбутній вміст)</string></property>
+         <property name="alignment"><set>Qt::AlignCenter</set></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item stretch="1">
+     <widget class="QWidget" name="workspace">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QVBoxLayout" name="workspaceLayout">
+       <property name="leftMargin"><number>0</number></property>
+       <property name="topMargin"><number>0</number></property>
+       <property name="rightMargin"><number>0</number></property>
+       <property name="bottomMargin"><number>0</number></property>
+       <property name="spacing"><number>12</number></property>
+       <item>
+        <widget class="QFrame" name="conversationArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding"><horstretch>0</horstretch><verstretch>1</verstretch></sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="inputField">
+         <property name="minimumSize"><size><width>0</width><height>90</height></size></property>
+         <property name="maximumSize"><size><width>16777215</width><height>90</height></size></property>
+         <property name="placeholderText"><string>Введіть повідомлення…</string></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="sidePanelRight">
+      <property name="minimumSize"><size><width>180</width><height>0</height></size></property>
+      <property name="maximumSize"><size><width>180</width><height>16777215</height></size></property>
+      <layout class="QVBoxLayout" name="rightPanelLayout">
+       <item>
+        <widget class="QLabel" name="rightPanelPlaceholder">
+         <property name="text"><string>Права панель
+(майбутній вміст)</string></property>
+         <property name="alignment"><set>Qt::AlignCenter</set></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AnimatedBackground</class>
+   <extends>QWidget</extends>
+   <header>window.animated_background</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
